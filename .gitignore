@@ -1,0 +1,21 @@
+# Ignorowanie plików Pythona
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorowanie Node.js
+node_modules/
+build/
+dist/
+
+# Ignorowanie plików systemowych/macOS
+.DS_Store
+
+# Ignorowanie logów, baz danych i tymczasowych plików
+*.log
+.env
+db.sqlite3
+
+# Ignorowanie plików Dockera
+postgres_data/
