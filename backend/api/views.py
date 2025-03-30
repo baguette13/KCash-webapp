@@ -5,27 +5,36 @@ from .models import Product, Order, ClientUser
 from .serializers import ProductSerializer, OrderSerializer, UserSerializer
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
-
-
-
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+@api_view(['GET', 'POST'])
+def product_list(request):
+    if request.method == 'GET':
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [permissions.AllowAny]
-
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        order = serializer.save(user=self.request.user)
-        order.total_price = sum(item.product.price * item.quantity for item in order.orderitem_set.all())
-        order.save()
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def order_list(request):
+    if request.method == 'GET':
+        orders = Order.objects.filter(user=request.user).order_by('-created_at')
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)  # Przypisz zamówienie do aktualnie zalogowanego użytkownika
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -33,7 +42,6 @@ def profile_details(request):
     user = request.user  # Zaciąganie zalogowanego użytkownika
     serializer = UserSerializer(user)
     return Response(serializer.data)
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -52,10 +60,10 @@ def update_profile(request):
 
     return JsonResponse({'message': 'Profile updated successfully'})
 
-
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user_orders(request):
-    user_orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    user=request.user
+    user_orders = Order.objects.filter(user=user).order_by('-created_at')
     serializer = OrderSerializer(user_orders, many=True)
     return Response(serializer.data)
