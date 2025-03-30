@@ -5,7 +5,7 @@ class ClientUser(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-
+    
 class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
