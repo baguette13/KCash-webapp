@@ -1,7 +1,10 @@
 import { FC } from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import { useCart } from "../../context/CartContext";
+import { CartProduct } from "../../interfaces/interfaces";
 
 interface ProductProps {
+  id: number;  // Pole id
   category: string; // Kategoria produktu spożywczego
   stock: string; // Ilość w magazynie
   name: string; // Nazwa produktu
@@ -11,6 +14,7 @@ interface ProductProps {
 }
 
 const Product: FC<ProductProps> = ({
+  id,
   category,
   stock,
   name,
@@ -18,6 +22,23 @@ const Product: FC<ProductProps> = ({
   containerClass,
   onClick,
 }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation(); 
+    
+    const cartProduct: CartProduct = {
+      id,
+      name,
+      category,
+      price,
+      stock,
+      quantity: 1,
+    };
+    
+    addToCart(cartProduct);
+  };
+
   return (
     <>
       <div
@@ -40,6 +61,12 @@ const Product: FC<ProductProps> = ({
           <span className="flex-1 text-white font-semibold text-xs">
             {price} PLN {/* Cena produktu */}
           </span>
+          <button 
+            onClick={handleAddToCart} 
+            className="ml-2 bg-[#008ABB] hover:bg-[#006a8e] text-white py-1 px-2 rounded-md text-xs transition-colors"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </>

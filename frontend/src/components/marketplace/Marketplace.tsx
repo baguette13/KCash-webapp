@@ -10,6 +10,7 @@ import mainService from "../../services/service";
 import { useNavigate } from "react-router-dom";
 import { PanelsProps } from "../../pages/MainPage";
 import HistoryModal from "../modals/HistoryModal";
+import ProductDetailModal from "../modals/ProductDetailModal";
 
 const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +25,7 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isUserModalActive, setIsUserModalActive] = useState<boolean>(false);
   const [isHistoryModalActive, setIsHistoryModalActive] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const onClose = () => {
     setIsUserModalActive(false);
@@ -85,6 +87,16 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
     setIsDialogOpen(false);
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredItems = currentItems.filter(
+    (item: any) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="w-full flex flex-col">
       <div className="flex w-full justify-end items-center px-16 gap-8 py-8 bg-[#234164] ring-1 ring-inset ring-gray-500/40 relative">
@@ -95,6 +107,8 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
               type="text"
               className="w-[500px] max-w-[95%] rounded-lg py-1 px-3 text-sm bg-white"
               placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
             />
             <FaSearch className="absolute top-[6px] text-zinc-500 right-10" />
           </div>
@@ -128,12 +142,14 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
               <span className="text-center">CATEGORY</span>
               <span className="text-center">STOCK</span>
               <span className="text-center">PRICE</span>
+              <span className="text-center">ACTION</span>
             </div>
           </div>
           <div className="flex flex-col">
-            {currentItems.map((item: any, i) => (
+            {filteredItems.map((item: any, i) => (
               <Product
                 key={i}
+                id={item.id}
                 category={item.category}
                 stock={item.stock}
                 name={item.name}
@@ -197,6 +213,13 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
             onClose={onClose}
           />
         </Modal>
+      )}
+      {isDialogOpen && selectedItem && (
+        <ProductDetailModal 
+          product={selectedItem} 
+          isOpen={isDialogOpen} 
+          onClose={closeDialog} 
+        />
       )}
     </div>
   );
