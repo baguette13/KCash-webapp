@@ -13,12 +13,47 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
+    
     class Meta:
         model = OrderItem
         fields = ('product', 'quantity')
 
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    product_id = serializers.IntegerField(source='product.id')
+    
+    class Meta:
+        model = OrderItem
+        fields = ('product_id', 'quantity')
+
 class OrderSerializer(serializers.ModelSerializer):
     products = OrderItemSerializer(source='orderitem_set', many=True, read_only=True)
+    
     class Meta:
         model = Order
         fields = ('id', 'user', 'products', 'total_price', 'status', 'created_at')
+        
+    def to_representation(self, instance):
+        # Dodajemy dodatkowy poziom zaciągnięcia danych (prefetch_related)
+        if isinstance(instance, Order):
+            try:
+                instance = Order.objects.prefetch_related('orderitem_set__product').get(pk=instance.pk)
+            except Order.DoesNotExist:
+                pass
+        return super().to_representation(instance)
+        
+    def create(self, validated_data):
+        products_data = self.initial_data.get('products', [])
+        order = Order.objects.create(**validated_data)
+        
+        for product_data in products_data:
+            product_id = product_data.get('product', {}).get('id')
+            quantity = product_data.get('quantity', 1)
+            
+            if product_id:
+                try:
+                    product = Product.objects.get(id=product_id)
+                    OrderItem.objects.create(order=order, product=product, quantity=quantity)
+                except Product.DoesNotExist:
+                    pass
+        
+        return order
