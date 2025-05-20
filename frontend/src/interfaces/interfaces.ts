@@ -5,3 +5,17 @@ export interface UserDetails {
   last_name: string;
   username: string;
 }
+
+export interface CartProduct {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  stock: string;
+  quantity: number;
+}
+
+export interface CartState {
+  products: CartProduct[];
+  total: number;
+}
