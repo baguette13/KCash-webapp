@@ -14,21 +14,52 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: kcash-rabbitmq
+    hostname: my-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
   backend:
     build: ./backend
     container_name: kcash-backend
     restart: always
     depends_on:
       - db
+      - rabbitmq
     environment:
       DB_HOST: db
       DB_NAME: mydatabase
       DB_USER: myuser
       DB_PASS: mypassword
+      RABBITMQ_HOST: rabbitmq
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+
+  worker:
+    build: ./backend
+    container_name: kcash-worker
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+      - backend
+    environment:
+      DB_HOST: db
+      DB_NAME: mydatabase
+      DB_USER: myuser
+      DB_PASS: mypassword
+      RABBITMQ_HOST: rabbitmq
+    volumes:
+      - ./backend:/app
+    command: ./start_worker.sh
 
   frontend:
     build: ./frontend
@@ -43,3 +74,4 @@ services:
 
 volumes:
   postgres_data:
+  rabbitmq_data:
