@@ -1,5 +1,9 @@
 from api.repositories.order_repository import OrderRepository
 from api.serializers import OrderSerializer
+from api.queue.rabbitmq_utils import send_message
+import logging
+
+logger = logging.getLogger(__name__)
 
 class OrderService:
     @staticmethod
@@ -10,10 +14,27 @@ class OrderService:
 
     @staticmethod
     def create_order(user, data):
+        # Dodajemy jawnie informację o użytkowniku do danych
+        data['user'] = user.id
         serializer = OrderSerializer(data=data)
+        
         if serializer.is_valid():
-            validated_data = serializer.validated_data
-            validated_data.setdefault('products', [])  # Ustaw domyślną pustą listę
-            order = OrderRepository.create_order(user, validated_data)
-            return OrderSerializer(order).data
+            order = serializer.save()
+            
+            # Dodajemy zamówienia do kolejki RabbitMQ
+            order_data = {
+                'order_id': order.id,
+                'user_id': user.id,
+                'timestamp': order.created_at.isoformat()
+            }
+            
+            queue_result = send_message('order_processing', order_data)
+            if queue_result:
+                logger.info(f"Order {order.id} sent to processing queue")
+            else:
+                logger.error(f"Failed to send order {order.id} to processing queue")
+            
+            # Pobieramy nowo utworzone zamówienie z prefetch_related
+            order_with_products = OrderRepository.get_order_with_products(order.id)
+            return OrderSerializer(order_with_products).data
         return {"error": serializer.errors}
