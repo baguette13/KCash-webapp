@@ -7,3 +7,4 @@ djangorestframework
 psycopg2-binary
 djangorestframework-simplejwt
 django-cors-headers
+pika==1.3.2
