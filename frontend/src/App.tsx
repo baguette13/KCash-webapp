@@ -3,21 +3,24 @@ import DefaultPage from "./pages/DefaultPage";
 import Login from "./pages/Login";
 import MainPage from "./pages/MainPage";
 import PrivateRoute from "./routes/PrivateRoute";
+import { CartProvider } from "./context/CartContext";
 
 
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<DefaultPage />} />
-          <Route path="/login" element={<Login />} />
-          {/*<Route path="/product/:id" element={<Register />} />*/}
-          <Route element={<PrivateRoute />}>
-          <Route path="/main" element={<MainPage />} />
-          </Route>
-        </Routes>
-      </Router>
+      <CartProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<DefaultPage />} />
+            <Route path="/login" element={<Login />} />
+            {/*<Route path="/product/:id" element={<Register />} />*/}
+            <Route element={<PrivateRoute />}>
+              <Route path="/main" element={<MainPage />} />
+            </Route>
+          </Routes>
+        </Router>
+      </CartProvider>
     </>
   );
 }
