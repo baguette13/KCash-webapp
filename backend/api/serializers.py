@@ -4,7 +4,7 @@ from .models import ClientUser, Product, Order, OrderItem
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientUser
-        fields = ('id', 'username', 'first_name', 'last_name', 'email',)
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'is_staff',)
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,13 +27,13 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     products = OrderItemSerializer(source='orderitem_set', many=True, read_only=True)
+    user_details = UserSerializer(source='user', read_only=True)
     
     class Meta:
         model = Order
-        fields = ('id', 'user', 'products', 'total_price', 'status', 'created_at')
+        fields = ('id', 'user', 'user_details', 'products', 'total_price', 'status', 'created_at')
         
     def to_representation(self, instance):
-        # Dodajemy dodatkowy poziom zaciągnięcia danych (prefetch_related)
         if isinstance(instance, Order):
             try:
                 instance = Order.objects.prefetch_related('orderitem_set__product').get(pk=instance.pk)
