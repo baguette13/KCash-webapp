@@ -27,6 +27,31 @@ class MainService {
     const method = "GET";
     return sendRequest(path, method);
   }
+
+  getAllOrders() {
+    const path = "api/logistics/orders/";
+    const method = "GET";
+    return sendRequest(path, method);
+  }
+
+  getPendingOrders() {
+    const path = "api/logistics/orders/pending/";
+    const method = "GET";
+    return sendRequest(path, method);
+  }
+
+  getCompletedOrders() {
+    const path = "api/logistics/orders/completed/";
+    const method = "GET";
+    return sendRequest(path, method);
+  }
+
+  updateOrderStatus(orderId: number, status: string) {
+    const path = `api/logistics/orders/${orderId}/status/`;
+    const method = "PUT";
+    const requestBody = { status };
+    return sendRequest(path, method, requestBody);
+  }
 }
 
 const mainService = new MainService();

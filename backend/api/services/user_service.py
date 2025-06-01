@@ -9,9 +9,13 @@ class UserService:
 
     @staticmethod
     def update_user_profile(user, data):
-        # Walidacja danych wejściowych
         serializer = UserSerializer(instance=user, data=data, partial=True)
         if serializer.is_valid():
             updated_user = UserRepository.update_user(user, serializer.validated_data)
             return UserSerializer(updated_user).data
         return {"error": serializer.errors}
+        
+    @staticmethod
+    def is_staff_user(user):
+        """Check if user is staff"""
+        return user.is_staff
