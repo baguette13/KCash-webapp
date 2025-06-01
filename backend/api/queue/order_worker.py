@@ -30,16 +30,11 @@ def process_order(order_data):
     try:
         logger.info(f"Processing order {order_data['order_id']}...")
         
-        # Simulate processing time 
         processing_time = 2  # seconds
         time.sleep(processing_time)
         
-        # Update order status to "Completed"
         order = Order.objects.get(id=order_data['order_id'])
-        order.status = 'Completed'
-        order.save()
-        
-        logger.info(f"Order {order_data['order_id']} has been successfully processed and completed.")
+        logger.info(f"Order {order_data['order_id']} has been successfully processed and remains in 'Pending' status for logistics review.")
         return True
     except Exception as e:
         logger.error(f"Error processing order: {e}")
@@ -81,13 +76,11 @@ def start_worker():
             channel = connection.channel()
             channel.queue_declare(queue=queue_name, durable=True)
             
-            # Only process one message at a time
             channel.basic_qos(prefetch_count=1)
             
             logger.info(f"Worker started, waiting for messages on queue '{queue_name}'...")
             channel.basic_consume(queue=queue_name, on_message_callback=callback)
             
-            # Start consuming messages
             channel.start_consuming()
         except pika.exceptions.AMQPConnectionError:
             logger.error("Lost connection to RabbitMQ, reconnecting...")
