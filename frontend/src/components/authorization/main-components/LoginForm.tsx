@@ -44,7 +44,30 @@ const LoginForm: FC = () => {
       );
       sessionStorage.setItem("access_token", result.data.access);
       sessionStorage.setItem("userId", result.data.id);
-      navigate("/main");
+      
+      try {
+        const userResponse = await axios.get(
+          "http://localhost:8000/api/profile/details/",
+          {
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${result.data.access}`
+            },
+          }
+        );
+        
+        const isStaff = userResponse.data.is_staff;
+        sessionStorage.setItem("is_staff", isStaff ? "true" : "false");
+        
+        if (isStaff) {
+          navigate("/logistics");
+        } else {
+          navigate("/main");
+        }
+      } catch (userError) {
+        console.error("Error fetching user details:", userError);
+        navigate("/main"); 
+      }
     } catch (error) {
       updateResponse("Bad credentials!", "bg-red-300");
     }
