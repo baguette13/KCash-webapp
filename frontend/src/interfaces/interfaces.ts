@@ -4,6 +4,7 @@ export interface UserDetails {
   id: number;
   last_name: string;
   username: string;
+  is_staff?: boolean;
 }
 
 export interface CartProduct {
@@ -18,4 +19,19 @@ export interface CartProduct {
 export interface CartState {
   products: CartProduct[];
   total: number;
+}
+
+export interface Order {
+  id: number;
+  user: number;
+  user_details: UserDetails;
+  products: OrderItem[];
+  total_price: string;
+  status: 'Pending' | 'Completed';
+  created_at: string;
+}
+
+export interface OrderItem {
+  product: CartProduct;
+  quantity: number;
 }
