@@ -1,0 +1,60 @@
+swagger_settings = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+    'DEFAULT_FIELD_INSPECTORS': [
+        'drf_yasg.inspectors.CamelCaseJSONFilter',
+        'drf_yasg.inspectors.ReferencingSerializerInspector',
+        'drf_yasg.inspectors.RelatedFieldInspector',
+        'drf_yasg.inspectors.ChoiceFieldInspector',
+        'drf_yasg.inspectors.FileFieldInspector',
+        'drf_yasg.inspectors.DictFieldInspector',
+        'drf_yasg.inspectors.SimpleFieldInspector',
+        'drf_yasg.inspectors.StringDefaultFieldInspector',
+    ],
+    'DEFAULT_MODEL_RENDERING': 'example',
+    'DEFAULT_FILTER_INSPECTORS': [
+        'drf_yasg.inspectors.CoreAPICompatInspector',
+    ],
+    'DEFAULT_PAGINATOR_INSPECTORS': [
+        'drf_yasg.inspectors.DjangoRestResponsePagination',
+        'drf_yasg.inspectors.CoreAPICompatInspector',
+    ],
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT token authentication. Example: "Bearer {token}"'
+        },
+    },
+    'VALIDATOR_URL': None,
+    'USE_SESSION_AUTH': False,
+    'SECURITY_REQUIREMENTS': [{'Bearer': []}],
+    'DOC_EXPANSION': 'list',
+    'DEEP_LINKING': True,
+    'DEFAULT_MODEL_DEPTH': 3,
+    'DEFAULT_INFO': None,
+    'DEFAULT_API_URL': None,
+    'OPERATIONS_SORTER': 'alpha',
+    'TAGS_SORTER': 'alpha',
+    'DEFAULT_GENERATOR_CLASS': 'drf_yasg.generators.OpenAPISchemaGenerator',
+    'DISPLAY_OPERATION_ID': False,
+    'PERSIST_AUTH': True,
+    'REFETCH_SCHEMA_WITH_AUTH': True,
+    'REFETCH_SCHEMA_ON_LOGOUT': True,
+    'FETCH_SCHEMA_WITH_QUERY': True,
+    'SUPPORTED_SUBMIT_METHODS': ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'],
+    'SPEC_URL': None,
+    'SERVERS': None,
+    'SHOW_COMMON_EXTENSIONS': True,
+}
+
+redoc_settings = {
+    'SPEC_URL': ('schema-json', {'format': '.json'}),
+    'LAZY_RENDERING': False,
+    'NATIVE_SCROLLBARS': False,
+    'REQUIRED_PROPS_FIRST': False,
+    'HIDE_HOSTNAME': False,
+    'EXPAND_RESPONSES': ["200", "201"],
+    'PATH_IN_MIDDLE': False,
+    'SORT_PROPS_ALPHABETICALLY': False,
+}

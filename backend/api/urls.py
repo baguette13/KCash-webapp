@@ -1,9 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
 from api import views
 from api.controllers import order_controller, product_controller, user_controller, logistics_controller
+from api.swagger_schema import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [

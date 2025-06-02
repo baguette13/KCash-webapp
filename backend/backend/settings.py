@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    'drf_yasg',
     'api',
 ]
 
@@ -131,12 +132,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header',
-        }
-    },
-}
+from .swagger_settings import swagger_settings as SWAGGER_SETTINGS
+from .swagger_settings import redoc_settings as REDOC_SETTINGS
