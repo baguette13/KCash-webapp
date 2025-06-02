@@ -13,23 +13,16 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-qi06c)q==xo###rp8%2&0*qrsl)0=p-_gdydzu+od#uu1a_^cp'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -85,13 +78,11 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', 'mydatabase'),
         'USER': os.getenv('DB_USER', 'myuser'),
         'PASSWORD': os.getenv('DB_PASS', 'mypassword'),
-        'HOST': os.getenv('DB_HOST', 'db'),  # "db" bo tak jest w docker-compose
+        'HOST': os.getenv('DB_HOST', 'db'),  
         'PORT': '5432',
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -107,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-AUTH_USER_MODEL = 'api.ClientUser'  # Własny model użytkownika
+AUTH_USER_MODEL = 'api.ClientUser' 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -115,8 +106,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
-   'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),  # Zmienione na 1 minutę dla testów
+   'REFRESH_TOKEN_LIFETIME': timedelta(minutes=2),  # Zmienione na 2 minuty dla testów
    'ROTATE_REFRESH_TOKENS': False,                 
    'BLACKLIST_AFTER_ROTATION': True,       
    'ALGORITHM': 'HS256',          
@@ -124,8 +115,6 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -136,13 +125,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
