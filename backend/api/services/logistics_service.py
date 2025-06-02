@@ -38,6 +38,10 @@ class LogisticsService:
         """
         Update order status
         """
+        valid_statuses = ['Pending', 'Completed']
+        if status not in valid_statuses:
+            return {"error": f"Invalid status: {status}. Must be one of {valid_statuses}"}
+            
         try:
             order = OrderRepository.get_order_with_products(order_id)
             if not order:
