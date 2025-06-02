@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Order } from "../interfaces/interfaces";
 import mainService from "../services/service";
 import Navbar from "../components/Navbar";
+import TokenDebugPanel from "../components/notification/TokenDebugPanel";
 
 const LogisticsPage: React.FC = () => {
   const [pendingOrders, setPendingOrders] = useState<Order[]>([]);
@@ -9,6 +10,7 @@ const LogisticsPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("pending");
+  const [showDebug, setShowDebug] = useState(false);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -51,6 +53,19 @@ const LogisticsPage: React.FC = () => {
 
   useEffect(() => {
     fetchOrders();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    setShowDebug(urlParams.get('debug') === 'true');
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        setShowDebug(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleCompleteOrder = async (orderId: number) => {
@@ -131,61 +146,64 @@ const LogisticsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Navbar />
-      <div className="container mx-auto py-8 px-4 mt-16">
-        <h1 className="text-2xl font-bold mb-6">Logistics Dashboard</h1>
-        
-        {error && (
-          <div className={error.includes('has been marked as completed') 
-            ? "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
-            : "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"}>
-            {error}
+    <>
+      <div className="min-h-screen bg-gray-100">
+        <Navbar />
+        <div className="container mx-auto py-8 px-4 mt-16">
+          <h1 className="text-2xl font-bold mb-6">Logistics Dashboard</h1>
+          
+          {error && (
+            <div className={error.includes('has been marked as completed') 
+              ? "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
+              : "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"}>
+              {error}
+            </div>
+          )}
+          
+          <div className="mb-4">
+            <div className="flex border-b">
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "pending" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab("pending")}
+              >
+                Pending Orders
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "completed" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab("completed")}
+              >
+                Completed Orders
+              </button>
+            </div>
           </div>
-        )}
-        
-        <div className="mb-4">
-          <div className="flex border-b">
-            <button
-              className={`px-4 py-2 ${
-                activeTab === "pending" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("pending")}
-            >
-              Pending Orders
-            </button>
-            <button
-              className={`px-4 py-2 ${
-                activeTab === "completed" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("completed")}
-            >
-              Completed Orders
-            </button>
-          </div>
-        </div>
 
-        {loading ? (
-          <div className="text-center py-10">
-            <p className="text-gray-500">Loading orders...</p>
-          </div>
-        ) : (
-          <div className="mt-4">
-            {activeTab === "pending" ? (
-              <>
-                <h2 className="text-xl font-semibold mb-4">Pending Orders</h2>
-                {renderOrders(pendingOrders, true)}
-              </>
-            ) : (
-              <>
-                <h2 className="text-xl font-semibold mb-4">Completed Orders</h2>
-                {renderOrders(completedOrders)}
-              </>
-            )}
-          </div>
-        )}
+          {loading ? (
+            <div className="text-center py-10">
+              <p className="text-gray-500">Loading orders...</p>
+            </div>
+          ) : (
+            <div className="mt-4">
+              {activeTab === "pending" ? (
+                <>
+                  <h2 className="text-xl font-semibold mb-4">Pending Orders</h2>
+                  {renderOrders(pendingOrders, true)}
+                </>
+              ) : (
+                <>
+                  <h2 className="text-xl font-semibold mb-4">Completed Orders</h2>
+                  {renderOrders(completedOrders)}
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      <TokenDebugPanel visible={showDebug} />
+    </>
   );
 };
 
