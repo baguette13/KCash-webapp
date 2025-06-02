@@ -7,6 +7,7 @@ import Product from "./Product";
 import Modal from "../modals/modal";
 import UserForm from "../modals/UserModal";
 import mainService from "../../services/service";
+import authService from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { PanelsProps } from "../../pages/MainPage";
 import HistoryModal from "../modals/HistoryModal";
@@ -36,7 +37,10 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
   };
 
   const logout = () => {
-    sessionStorage.clear();
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('is_staff');
     navigate("/");
   };
 

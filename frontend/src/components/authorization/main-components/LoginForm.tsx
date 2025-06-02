@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { FaLock, FaUser } from "react-icons/fa";
 import AuthHeader from "../utils/AuthHeader";
@@ -18,6 +18,15 @@ const LoginForm: FC = () => {
   const [response, setResponse] = useState<Response>({ text: "", color: "" });
   const [responseIsVisible, setResponseIsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const sessionExpired = sessionStorage.getItem('sessionExpired');
+    if (sessionExpired === 'true') {
+      updateResponse("Your session has expired. Please log in again.", "bg-amber-400");
+      sessionStorage.removeItem('sessionExpired');
+    }
+  }, []);
 
   const updateResponse = (text: string, color: string) => {
     setResponse({ text, color });
@@ -43,6 +52,7 @@ const LoginForm: FC = () => {
         }
       );
       sessionStorage.setItem("access_token", result.data.access);
+      sessionStorage.setItem("refresh_token", result.data.refresh);
       sessionStorage.setItem("userId", result.data.id);
       
       try {
