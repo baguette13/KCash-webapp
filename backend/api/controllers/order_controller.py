@@ -22,5 +22,6 @@ def get_user_orders(request):
     """
     Endpoint do pobierania historii zamówień użytkownika.
     """
-    user_orders = OrderService.get_user_orders(request.user)
+    status_filter = request.GET.get('status')
+    user_orders = OrderService.get_user_orders(request.user, status_filter)
     return Response(user_orders, status=status.HTTP_200_OK)

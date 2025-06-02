@@ -55,3 +55,10 @@ class OrderRepository:
                 print(f"Product with id {product_id} does not exist")
         
         return order
+    
+    @staticmethod
+    def get_orders_by_user_and_status(user, status):
+        """
+        Get orders by user and status
+        """
+        return Order.objects.filter(user=user, status=status).prefetch_related('orderitem_set__product').order_by('-created_at')
