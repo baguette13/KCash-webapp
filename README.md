@@ -143,6 +143,29 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
 - **Przetwarzanie zamówień**: Składanie zamówień, które są przetwarzane asynchronicznie
 - **Historia zamówień**: Podgląd wcześniejszych zamówień i ich statusu
 
+## Testowanie
+
+Projekt zawiera kompleksowy zestaw testów jednostkowych dla API, które pokrywają wszystkie endpointy. Testy sprawdzają zarówno poprawne działanie, jak i odpowiednią obsługę błędów.
+
+### Uruchamianie testów
+
+Aby uruchomić testy, należy użyć następującego polecenia w kontenerze Docker:
+
+```bash
+docker exec -it kcash-backend bash -c "cd /app && python manage.py test api.tests"
+```
+
+### Pokrycie testami
+
+Szczegółowy raport pokrycia testami można znaleźć w pliku `backend/api/test_coverage.md`. Raport zawiera:
+
+- Listę wszystkich testowanych endpointów API
+- Nazwy testów pokrywających każdy endpoint
+- Szczegółowy opis każdego testu
+- Podsumowanie pokrycia testami
+
+Obecnie projekt zawiera 26 testów jednostkowych, które testują wszystkie endpointy API z różnymi scenariuszami użycia.
+
 ## Struktura projektu
 
 ### Struktura backendu
