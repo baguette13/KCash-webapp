@@ -23,7 +23,6 @@ const HistoryModal: FC<HistoryModalProps> = ({ onClose }) => {
     mainService
       .getUserHistory()
       .then((data) => {
-        console.log("Raw order history data:", JSON.stringify(data, null, 2));
         const limitedOrders = data.slice(0, 5);
         setHistoryOrders(limitedOrders);
         setLoading(false);

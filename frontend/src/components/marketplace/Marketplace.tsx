@@ -77,7 +77,6 @@ const Marketplace: FC<PanelsProps> = ({ userDetails, setUserDetails }) => {
       setProducts(limitedProducts);
       setTotalPages(Math.ceil(limitedProducts.length / itemsPerPage));
     } catch (error) {
-      console.log(error);
     }
   };
 

@@ -21,7 +21,6 @@ const UserForm: React.FC<UserFormProps> = ({
 
     setUserDetailsHelper((prev: any) => ({ ...prev, [name]: value }));
 
-    console.log({ ...userDetails, [name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

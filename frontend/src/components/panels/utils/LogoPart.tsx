@@ -8,7 +8,6 @@ interface LogoPartProps {
 }
 
 const LogoPart: React.FC<LogoPartProps> = ({ firstName, lastName, email }) => {
-  console.log(firstName)
   return (
     <div className="flex items-center space-x-4">
       <img

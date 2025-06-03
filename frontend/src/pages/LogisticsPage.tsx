@@ -22,8 +22,6 @@ const LogisticsPage: React.FC = () => {
         mainService.getCompletedOrders()
       ]);
       
-      console.log("Pending response:", pendingResponse);
-      console.log("Completed response:", completedResponse);
       
       const pendingData = pendingResponse && pendingResponse.data ? pendingResponse.data : [];
       

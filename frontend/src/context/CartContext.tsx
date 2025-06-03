@@ -125,7 +125,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         }))
       };
       
-      console.log("Sending order data:", JSON.stringify(orderData, null, 2));
       
       const response = await fetch("http://localhost:8000/api/orders/", {
         method: "POST",
