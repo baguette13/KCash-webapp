@@ -1,15 +1,14 @@
-# KCash - Platforma inwestycyjna i marketplace produktów finansowych
+# KCash - Platforma Produktów Finansowych
 
-KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która umozliwia klientom składanie zamówień na towary.
+KCash to aplikacja webowa służąca jako platforma marketplace, umożliwiająca klientom przeglądanie, dodawanie do koszyka i składanie zamówień na produkty.
 
 ## Architektura projektu
 
-
 ```
-                    +----------------+
-                    |     Klient     |
+                    +--------------------+
+                    |     Klient         |
                     | (React/TypeScript) |
-                    +--------+-------+
+                    +--------+-----------+
                              |
                              | HTTP API
                              |
@@ -22,12 +21,12 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
                   |                      |
         +---------v-------+    +---------v-------+
         |      Baza       |    |    Kolejka      |
-        |    danych       |    |    komunikatów  |
+        |     danych      |    |    wiadomości   |
         |   (PostgreSQL)  |    |   (RabbitMQ)    |
         +-----------------+    +---------+-------+
                                          |
                                 +--------v-------+
-                                |  Worker        |
+                                |     Worker     |
                                 | (Przetwarzanie |
                                 |  w tle)        |
                                 +----------------+
@@ -35,48 +34,50 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
 
 ### Główne komponenty:
 
-1. **Frontend**: Aplikacja React/TypeScript z architekturą opartą na komponentach
+1. **Frontend**: Aplikacja React/TypeScript z architekturą komponentową wykorzystującą TailwindCSS do stylizacji
 2. **Backend**: Django REST API z warstwową architekturą:
-   - Kontrolery: Obsługa żądań i odpowiedzi HTTP
+   - Kontrolery: Obsługa żądań HTTP i odpowiedzi
    - Serwisy: Implementacja logiki biznesowej
    - Repozytoria: Zarządzanie dostępem do danych
-   - Modele: Definiowanie struktur danych
+   - Modele: Definicja struktur danych
 
-3. **Przetwarzanie asynchroniczne**: RabbitMQ do kolejkowania komunikatów i przetwarzania zamówień w tle
+3. **Przetwarzanie asynchroniczne**: RabbitMQ do kolejkowania wiadomości i przetwarzania zamówień w tle
 4. **Przechowywanie danych**: Baza danych PostgreSQL do trwałego przechowywania danych
 
-## Wykorzystane technologie
+## Stos technologiczny
 
 ### Frontend
-- **React**: Wybrany ze względu na styczność w przeszłości
-- **TypeScript**: Dodaje statyczne typowanie do JavaScript, poprawiając jakość kodu
-- **React Router**: Obsługuje routing po stronie klienta dla płynnego działania
-- **Axios**: Klient HTTP oparty na obietnicach do wykonywania zapytań API
-- **TailwindCSS**: Framework CSS typu utility-first do szybkiego tworzenia interfejsów użytkownika
-- **React Icons**: Kompleksowa biblioteka ikon
+- **React 18**: Biblioteka UI oparta na komponentach do budowania interaktywnych interfejsów użytkownika
+- **TypeScript**: Dodaje statyczne typowanie do JavaScript, poprawiając jakość kodu 
+- **React Router**: Obsługuje routing po stronie klienta
+- **Axios**: Klient HTTP oparty na obietnicach do wykonywania żądań API
+- **TailwindCSS**: Framework CSS oparty na klasach użytkowych do szybkiego tworzenia UI
+- **React Icons**: Bogata biblioteka ikon
+- **Context API**: Do zarządzania stanem (Koszyk i kontekst API)
 
 ### Backend
-- **Django**: Solidny framework webowy w Pythonie z wbudowanymi funkcjami bezpieczeństwa i ORM
-- **Django REST Framework**: Potężny i elastyczny zestaw narzędzi do budowania API webowych
+- **Django**: Solidny framework webowy Python z wbudowanymi funkcjami bezpieczeństwa i ORM
+- **Django REST Framework**: Potężny i elastyczny zestaw narzędzi do budowania Web API
 - **PostgreSQL**: Zaawansowana, open-source'owa relacyjna baza danych do trwałego przechowywania danych
-- **RabbitMQ**: Broker komunikatów do przetwarzania asynchronicznego i komunikacji między usługami
-- **Simple JWT**: Uwierzytelnianie JSON Web Token dla bezpiecznego dostępu do API
+- **RabbitMQ**: Broker wiadomości do przetwarzania asynchronicznego i komunikacji międzyserwisowej
+- **Simple JWT**: Uwierzytelnianie JWT do bezpiecznego dostępu do API
+- **drf-yasg**: Generator dokumentacji API Swagger
 
 ### DevOps
-- **Docker & Docker Compose**: Konteneryzacja dla spójnego środowiska rozwoju i wdrażania
+- **Docker & Docker Compose**: Konteneryzacja dla spójnych środowisk rozwojowych i wdrożeniowych
 
-## Instrukcje uruchomienia
+## Pierwsze kroki
 
 ### Wymagania wstępne
 - Docker i Docker Compose zainstalowane w systemie
 - Git do kontroli wersji
 
-### Pierwsze kroki
+### Początkowa konfiguracja
 
 1. Sklonuj repozytorium:
    ```bash
    git clone https://github.com/baguette13/KCash-webapp.git
-   cd KCash-webapp
+   cd KCash
    ```
 
 2. Uruchom wszystkie usługi za pomocą Docker Compose:
@@ -85,21 +86,22 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
    ```
 
    To polecenie:
-   - Zbuduje i uruchomi bazę danych PostgreSQL
-   - Zbuduje i uruchomi brokera wiadomości RabbitMQ
-   - Zbuduje i uruchomi backend Django
-   - Zbuduje i uruchomi proces przetwarzania w tle
-   - Zbuduje i uruchomi frontend React
+   - Buduje i uruchamia bazę danych PostgreSQL
+   - Buduje i uruchamia broker wiadomości RabbitMQ
+   - Buduje i uruchamia backend Django
+   - Buduje i uruchamia worker do przetwarzania w tle
+   - Buduje i uruchamia frontend React
 
 3. Dostęp do aplikacji:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000/api/
-   - Konsola zarządzania RabbitMQ: http://localhost:15672 (użytkownik: guest, hasło: guest)
+   - Dokumentacja API Swagger: http://localhost:8000/api/docs
+   - Konsola zarządzania RabbitMQ: http://localhost:15672 (login: guest, hasło: guest)
 
 ### Konfiguracja środowiska deweloperskiego
 
-#### Rozwój backendu
-1. Przejdź do katalogu backendu:
+#### Rozwój Backend
+1. Przejdź do katalogu backend:
    ```bash
    cd backend
    ```
@@ -109,7 +111,7 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
    pip install -r requirements.txt
    ```
 
-3. Wykonaj migracje:
+3. Zastosuj migracje:
    ```bash
    python manage.py migrate
    ```
@@ -119,8 +121,8 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
    python manage.py runserver
    ```
 
-#### Rozwój frontendu
-1. Przejdź do katalogu frontendu:
+#### Rozwój Frontend
+1. Przejdź do katalogu frontend:
    ```bash
    cd frontend
    ```
@@ -135,65 +137,111 @@ KCash to nowoczesna aplikacja webowa służąca jako platforma zakupowa, która 
    npm start
    ```
 
-## Funkcje
+## Funkcjonalności
 
-- **Uwierzytelnianie użytkowników**: Bezpieczny system logowania
-- **Przeglądanie produktów**: Podgląd dostępnych produktów finansowych
+- **Uwierzytelnianie użytkownika**: Bezpieczny system logowania z tokenami JWT
+- **Przeglądanie produktów**: Wyświetlanie dostępnych produktów finansowych
 - **Koszyk zakupowy**: Dodawanie i zarządzanie produktami w koszyku
-- **Przetwarzanie zamówień**: Składanie zamówień, które są przetwarzane asynchronicznie
-- **Historia zamówień**: Podgląd wcześniejszych zamówień i ich statusu
+- **Przetwarzanie zamówień**: Składanie zamówień przetwarzanych asynchronicznie
+- **Historia zamówień**: Przeglądanie poprzednich zamówień i ich statusów
+- **Zarządzanie sesją**: Automatyczna obsługa wygaśnięcia i odnowienia tokenu
+- **Panel administracyjny**: Specjalny interfejs dla pracowników do zarządzania zamówieniami
 
 ## Testowanie
 
-Projekt zawiera kompleksowy zestaw testów jednostkowych dla API, które pokrywają wszystkie endpointy. Testy sprawdzają zarówno poprawne działanie, jak i odpowiednią obsługę błędów.
+Projekt zawiera kompleksowy zestaw testów jednostkowych dla API, obejmujących wszystkie endpointy. Testy sprawdzają zarówno poprawność działania, jak i właściwą obsługę błędów.
 
 ### Uruchamianie testów
 
-Aby uruchomić testy, należy użyć następującego polecenia w kontenerze Docker:
+Aby uruchomić testy, użyj następującego polecenia w kontenerze Docker:
 
 ```bash
 docker exec -it kcash-backend bash -c "cd /app && python manage.py test api.tests"
 ```
 
-### Pokrycie testami
+Lub lokalnie:
 
-Szczegółowy raport pokrycia testami można znaleźć w pliku `backend/api/test_coverage.md`. Raport zawiera:
+```bash
+cd backend
+python manage.py test api.tests
+```
+
+### Raport pokrycia testami
+
+Szczegółowy raport pokrycia testami znajduje się w pliku `backend/api/test_coverage.md`. Raport zawiera:
 
 - Listę wszystkich testowanych endpointów API
 - Nazwy testów pokrywających każdy endpoint
 - Szczegółowy opis każdego testu
 - Podsumowanie pokrycia testami
 
-Obecnie projekt zawiera 26 testów jednostkowych, które testują wszystkie endpointy API z różnymi scenariuszami użycia.
-
 ## Struktura projektu
 
-### Struktura backendu
+### Struktura Backend
 ```
 backend/
 ├── api/                       # Główna aplikacja API
 │   ├── controllers/           # Obsługa żądań
+│   │   ├── logistics_controller.py
+│   │   ├── order_controller.py
+│   │   ├── product_controller.py
+│   │   └── user_controller.py
 │   ├── models.py              # Modele danych
 │   ├── repositories/          # Warstwa dostępu do danych
+│   │   ├── order_repository.py
+│   │   ├── product_repository.py
+│   │   └── user_repository.py
 │   ├── services/              # Logika biznesowa
+│   │   ├── logistics_service.py
+│   │   ├── order_service.py
+│   │   ├── product_service.py
+│   │   └── user_service.py
 │   ├── queue/                 # Integracja z RabbitMQ
-│   └── serializers.py         # Serializacja danych
+│   │   ├── order_worker.py
+│   │   ├── rabbitmq_utils.py
+│   │   └── status_worker.py
+│   ├── serializers.py         # Serializacja danych
+│   ├── tests.py               # Testy API
+│   └── urls.py                # Routing API
 ├── backend/                   # Ustawienia projektu Django
+│   ├── settings.py
+│   └── swagger_settings.py
 └── manage.py                  # Narzędzie wiersza poleceń Django
 ```
 
-### Struktura frontendu
+### Struktura Frontend
 ```
 frontend/
 ├── public/                    # Pliki statyczne
+│   ├── growth-investment.svg
+│   ├── index.html
+│   └── manifest.json
 └── src/
     ├── components/            # Komponenty wielokrotnego użytku
+    │   ├── authorization/     # Komponenty związane z uwierzytelnianiem
+    │   ├── marketplace/       # Komponenty wyświetlania produktów
+    │   ├── modals/            # Okna dialogowe
+    │   ├── notification/      # Powiadomienia użytkownika
+    │   ├── panels/            # Główne panele UI
+    │   └── Navbar.tsx         # Pasek nawigacyjny
     ├── context/               # Dostawcy kontekstu React
+    │   ├── ApiContext.tsx     # Zarządzanie stanem API
+    │   └── CartContext.tsx    # Zarządzanie koszykiem
+    ├── hooks/                 # Niestandardowe hooki React
+    │   └── useSessionMonitor.tsx # Zarządzanie sesją
     ├── interfaces/            # Interfejsy TypeScript
+    │   └── interfaces.ts
     ├── pages/                 # Strony aplikacji
-    └── services/              # Integracja z usługami API
+    │   ├── DefaultPage.tsx
+    │   ├── Login.tsx
+    │   ├── LogisticsPage.tsx  # Panel administracyjny
+    │   └── MainPage.tsx       # Główny interfejs użytkownika
+    ├── routes/                # Routing aplikacji
+    ├── services/              # Usługi integracji API
+    ├── wrappers/              # Wrappery komponentów
+    └── App.tsx                # Główny komponent
 ```
 
 ## Licencja
 
-Ten projekt jest licencjonowany na podstawie licencji MIT - szczegóły znajdują się w pliku LICENSE.
+Ten projekt jest objęty licencją MIT.
