@@ -25,7 +25,6 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<DefaultPage />} />
           <Route path="/login" element={<Login />} />
-          {/*<Route path="/product/:id" element={<Register />} />*/}
           <Route element={<PrivateRoute />}>
             <Route path="/main" element={<MainPage />} />
             <Route path="/logistics" element={<LogisticsPage />} />

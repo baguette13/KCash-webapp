@@ -7,7 +7,6 @@ import pika
 import logging
 from datetime import datetime
 
-# Setup Django environment
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(BASE_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')

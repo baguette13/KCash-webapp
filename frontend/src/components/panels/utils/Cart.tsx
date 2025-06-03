@@ -34,12 +34,10 @@ const Cart: FC = () => {
         scrollbarColor: "#4b5563 #2c2f35",
       }}
     >
-      {/* Header */}
       <div>
         <h2 className="text-2xl font-bold flex justify-center pb-2">Cart</h2>
       </div>
 
-      {/* Products List */}
       <div className="space-y-4">
         {cart.products.length === 0 ? (
           <div className="text-center text-gray-300 py-4">Your cart is empty</div>
@@ -49,7 +47,6 @@ const Cart: FC = () => {
               key={product.id}
               className="bg-[#4DA9D9] rounded-xl shadow-md p-4 space-y-3 transform hover:scale-[1.02] transition-transform duration-200"
             >
-              {/* Product Header */}
               <div className="flex justify-between items-center">
                 <p className="text-lg font-medium">{product.name}</p>
                 <p className="text-lg font-medium">{product.price} PLN</p>
@@ -90,7 +87,6 @@ const Cart: FC = () => {
         )}
       </div>
 
-      {/* Order Summary and Checkout Button */}
       {cart.products.length > 0 && (
         <div className="mt-4">
           <div className="flex justify-between font-bold text-lg mb-4">

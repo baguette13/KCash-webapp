@@ -104,7 +104,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         return Promise.reject("No token or empty cart");
       }
       
-      // Pobierz dane użytkownika z poprawnego endpointu
       const userDataResponse = await fetch("http://localhost:8000/api/profile/details/", {
         headers: {
           "Authorization": `Bearer ${token}`,

@@ -165,7 +165,7 @@ class APITestSuite(APITestCase):
         """Test poprawnego pobierania historii zamówień użytkownika"""
         response = self.client.get("/api/orders/history/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)  # Powinny być 2 zamówienia
+        self.assertEqual(len(response.data), 2)  
         
     def test_get_user_orders_filtering(self):
         """Test filtrowania historii zamówień użytkownika po statusie"""

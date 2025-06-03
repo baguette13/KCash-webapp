@@ -4,13 +4,13 @@ import { useCart } from "../../context/CartContext";
 import { CartProduct } from "../../interfaces/interfaces";
 
 interface ProductProps {
-  id: number;  // Pole id
-  category: string; // Kategoria produktu spożywczego
-  stock: string; // Ilość w magazynie
-  name: string; // Nazwa produktu
-  price: string; // Cena produktu
-  containerClass: string; // Klasa kontenera dla stylizacji
-  onClick: () => void; // Funkcja wywoływana przy kliknięciu
+  id: number;  
+  category: string; 
+  stock: string; 
+  name: string; 
+  price: string; 
+  containerClass: string; 
+  onClick: () => void; 
 }
 
 const Product: FC<ProductProps> = ({
@@ -53,13 +53,13 @@ const Product: FC<ProductProps> = ({
         </div>
         <div className="flex flex-row gap-6 text-xs"> 
           <span className="flex-1 text-white font-semibold text-xs">
-            {category} {/* Kategoria produktu */}
+            {category} 
           </span>
           <span className="flex-1 text-white font-semibold text-xs">
-            {stock} {/* Stan magazynowy */}
+            {stock} 
           </span>
           <span className="flex-1 text-white font-semibold text-xs">
-            {price} PLN {/* Cena produktu */}
+            {price} PLN 
           </span>
           <button 
             onClick={handleAddToCart} 
